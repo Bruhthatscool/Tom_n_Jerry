@@ -3,6 +3,11 @@ let totalDistance = 0;
 let lastX, lastY;
 let isFirstMove = true;
 
+// Time-based estimation variables
+let lastActiveTime = Date.now();
+let estimatedDistance = 0;
+const KM_PER_HOUR_ESTIMATE = 3; // Adjust this based on average mouse movement speed
+
 // DOM elements
 const distanceDisplay = document.getElementById("distance");
 const percentageDisplay = document.getElementById("percentage");
@@ -39,6 +44,13 @@ function init() {
   nextBtn.addEventListener("click", pickRandomComparisonAndUpdate);
   document.addEventListener("mousemove", handleMouseMove);
 
+  // Add visibility change listener
+  document.addEventListener("visibilitychange", handleVisibilityChange);
+  handleVisibilityChange(); // Initialize
+
+  // Start estimation interval
+  setInterval(updateEstimatedDistance, 1000); // Update every second
+
   updateDisplay();
 }
 
@@ -50,6 +62,37 @@ function pickRandomComparison() {
 function pickRandomComparisonAndUpdate() {
   pickRandomComparison();
   updateDisplay();
+}
+
+// New function to handle tab visibility changes
+function handleVisibilityChange() {
+  if (document.hidden) {
+    // Tab became inactive - store last active time
+    lastActiveTime = Date.now();
+  } else {
+    // Tab became active - calculate estimated distance while away
+    const timeInactiveMs = Date.now() - lastActiveTime;
+    const hoursInactive = timeInactiveMs / (1000 * 60 * 60);
+    estimatedDistance += hoursInactive * KM_PER_HOUR_ESTIMATE;
+    lastActiveTime = Date.now();
+  }
+}
+
+// New function to update estimated distance
+function updateEstimatedDistance() {
+  if (!document.hidden) {
+    const timeActiveMs = Date.now() - lastActiveTime;
+    const hoursActive = timeActiveMs / (1000 * 60 * 60);
+    estimatedDistance += hoursActive * KM_PER_HOUR_ESTIMATE;
+    lastActiveTime = Date.now();
+
+    // Add to your total distance
+    if (estimatedDistance > 0) {
+      totalDistance += estimatedDistance;
+      estimatedDistance = 0;
+      updateDisplay();
+    }
+  }
 }
 
 function handleMouseMove(e) {
