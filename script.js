@@ -38,12 +38,20 @@ class Particle {
   constructor(x, y) {
     this.x = x;
     this.y = y;
-    this.size = Math.random() * 3 + 1;
-    this.speedX = Math.random() * 1.5 - 0.75;
-    this.speedY = Math.random() * 1.5 - 0.75;
+    this.size = Math.random() * 8 + 3;
+    this.speedX = Math.random() * 2 - 1;
+    this.speedY = Math.random() * 2 - 1;
     this.color = palettes[currentPalette]();
     this.life = 100;
-    this.decay = Math.random() * 3 + 2;
+    this.decay = Math.random() * 3 + 1;
+    this.shape = this.getRandomShape(); // New: Random shape type
+    this.rotation = 0;
+    this.rotationSpeed = Math.random() * 0.2 - 0.1;
+  }
+
+  getRandomShape() {
+    const shapes = ["circle", "square", "triangle", "star"];
+    return shapes[Math.floor(Math.random() * shapes.length)];
   }
 
   update() {
@@ -51,13 +59,66 @@ class Particle {
     this.y += this.speedY;
     this.life -= this.decay;
     this.size *= 0.98;
+    this.rotation += this.rotationSpeed;
   }
 
   draw() {
     ctx.globalAlpha = this.life / 100;
     ctx.fillStyle = this.color;
+    ctx.save();
+    ctx.translate(this.x, this.y);
+    ctx.rotate(this.rotation);
+
+    switch (this.shape) {
+      case "square":
+        ctx.fillRect(-this.size / 2, -this.size / 2, this.size, this.size);
+        break;
+      case "triangle":
+        this.drawTriangle();
+        break;
+      case "star":
+        this.drawStar();
+        break;
+      default: // circle
+        ctx.beginPath();
+        ctx.arc(0, 0, this.size / 2, 0, Math.PI * 2);
+        ctx.fill();
+    }
+    ctx.restore();
+  }
+  drawTriangle() {
     ctx.beginPath();
-    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+    ctx.moveTo(0, -this.size / 2);
+    ctx.lineTo(-this.size / 2, this.size / 2);
+    ctx.lineTo(this.size / 2, this.size / 2);
+    ctx.closePath();
+    ctx.fill();
+  }
+
+  drawStar() {
+    const spikes = 5;
+    const outerRadius = this.size / 2;
+    const innerRadius = outerRadius * 0.4;
+    let rot = (Math.PI / 2) * 3;
+    let x, y;
+
+    ctx.beginPath();
+    ctx.moveTo(0, -outerRadius);
+
+    for (let i = 0; i < spikes; i++) {
+      x = Math.cos(rot) * outerRadius;
+      y = Math.sin(rot) * outerRadius;
+      ctx.lineTo(x, y);
+      rot += Math.PI / spikes;
+
+      x = Math.cos(rot) * innerRadius;
+      y = Math.sin(rot) * innerRadius;
+      ctx.lineTo(x, y);
+      rot += Math.PI / spikes;
+    }
+
+    ctx.lineTo(0, -outerRadius);
+    ctx.closePath();
     ctx.fill();
   }
 }
@@ -101,7 +162,8 @@ function init() {
   const nextComparisonBtn = document.getElementById("next-comparison");
   const colorToggleBtn = document.getElementById("color-toggle");
   const colorPalette = document.getElementById("color-palette");
-
+  const shapeToggle = document.getElementById("shape-toggle");
+  const shapePalette = document.getElementById("shape-palette");
   // Set up event listeners
   nextComparisonBtn.addEventListener("click", function () {
     pickRandomComparison();
@@ -118,6 +180,20 @@ function init() {
       currentPalette = option.dataset.palette;
       colorPalette.classList.add("hidden");
       particles = [];
+    });
+  });
+
+  // shape options
+  shapeToggle.addEventListener("click", () => {
+    shapePalette.classList.toggle("hidden");
+  });
+
+  document.querySelectorAll(".shape-option").forEach((option) => {
+    option.addEventListener("click", () => {
+      // Update all future particles
+      Particle.prototype.getRandomShape = () => option.dataset.shape;
+      shapePalette.classList.add("hidden");
+      particles = []; // Clear existing particles
     });
   });
 
