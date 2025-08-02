@@ -131,3 +131,22 @@ button:hover {
   pointer-events: none;
   z-index: 10;
 }
+
+#shape-palette {
+  display: flex;
+  gap: 12px;
+  margin-top: 15px;
+}
+
+.shape-option {
+  font-size: 20px;
+  background: none;
+  border: 2px solid #ddd;
+  border-radius: 5px;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.shape-option:hover {
+  border-color: #aaa;
+}
