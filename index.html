@@ -4,20 +4,43 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Mouse Distance Tracker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Arvo:wght@400;700&family=HK+Grotesk:wght@700&display=swap"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
+    <canvas id="particle-canvas"></canvas>
     <div class="tracker-container">
-      <h1>Mouse Distance Tracker</h1>
-      <p id="distance-display">
-        You've moved <span id="distance">0 km</span> today.
-      </p>
-      <p id="animal-comparison">
-        That's <span id="percentage">0%</span> of
-        <span id="comparison-name">a penguin's migration</span>.
-      </p>
-      <!-- Button will be added here by JavaScript -->
+      <h1>
+        <span>MOUSE</span>
+        <span>DISTANCE</span>
+        <span>TRACKER</span>
+      </h1>
+      <div class="stats">
+        <p class="distance">
+          You've moved <span id="distance">0.00</span>km today.
+        </p>
+        <p class="comparison">
+          That's <span id="percentage">0.000</span>% of
+          <span id="comparison-name">a penguin's migration</span>.
+        </p>
+      </div>
+      <div class="controls">
+        <button id="next-comparison">Next Comparison</button>
+        <button id="color-toggle">Colours</button>
+        <div id="color-palette" class="hidden">
+          <div class="color-option" data-palette="fire"></div>
+          <div class="color-option" data-palette="ocean"></div>
+          <div class="color-option" data-palette="forest"></div>
+          <div class="color-option" data-palette="rainbow"></div>
+        </div>
+      </div>
     </div>
+
     <script src="script.js"></script>
   </body>
 </html>
