@@ -1,35 +1,133 @@
+:root {
+  --hk-modular: "HK Grotesk", sans-serif;
+  --arvo: "Arvo", serif;
+}
+
 body {
-  font-family: Arial, sans-serif;
-  text-align: center;
-  margin-top: 50px;
+  font-family: var(--arvo);
+  background-color: #f8f8f8;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  margin: 0;
+  padding: 20px;
 }
 
 .tracker-container {
-  background: #f0f0f0;
-  padding: 20px;
-  border-radius: 10px;
-  display: inline-block;
-  max-width: 400px;
+  background: white;
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  max-width: 700px;
+  width: 100%;
+  text-align: center;
 }
 
-#distance,
-#percentage,
-#comparison-name {
+h1 {
+  font-family: var(--hk-modular);
+  font-size: 58.4px;
+  font-weight: 700;
+  margin: 0 0 30px 0;
+  color: #222;
+  letter-spacing: -0.5px;
+  line-height: 1.1;
+  display: flex;
+  flex-direction: column;
+}
+
+.stats {
+  margin-bottom: 40px;
+}
+
+.distance,
+.comparison {
+  font-family: var(--arvo);
+  font-size: 32.8px;
+  line-height: 1.4;
+  color: #444;
+  margin: 10px 0;
+}
+
+.distance span,
+.comparison span {
   font-weight: bold;
-  color: #2c3e50;
+  color: #222;
 }
 
-#next-comparison {
-  padding: 8px 16px;
-  background: #2c3e50;
-  color: white;
+.controls {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  margin-top: 30px;
+}
+
+button {
+  font-family: var(--arvo);
+  font-size: 23px;
+  padding: 12px 24px;
+  background: #f0f0f0;
+  color: #333;
   border: none;
-  border-radius: 4px;
+  border-radius: 8px;
   cursor: pointer;
-  margin-top: 15px;
-  font-size: 14px;
+  transition: all 0.2s ease;
 }
 
-#next-comparison:hover {
-  background: #1a252f;
+button:hover {
+  background: #e0e0e0;
+  transform: translateY(-2px);
+}
+
+#color-palette {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.color-option {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.color-option:hover {
+  transform: scale(1.1);
+}
+
+.color-option[data-palette="fire"] {
+  background: linear-gradient(45deg, #ff0000, #ff9500);
+}
+.color-option[data-palette="ocean"] {
+  background: linear-gradient(45deg, #00a8ff, #0095ff);
+}
+.color-option[data-palette="forest"] {
+  background: linear-gradient(45deg, #00b894, #55efc4);
+}
+.color-option[data-palette="rainbow"] {
+  background: linear-gradient(
+    45deg,
+    red,
+    orange,
+    yellow,
+    green,
+    blue,
+    indigo,
+    violet
+  );
+}
+
+.hidden {
+  display: none !important;
+}
+
+#particle-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 10;
 }
