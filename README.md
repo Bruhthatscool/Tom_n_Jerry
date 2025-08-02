@@ -36,27 +36,13 @@ It's a web app, not deployed anywhere yet. If you wanna try it out, just clone o
 
 ### Project Documentation
 For Software:
+Using HTML, CSS and Javascript, this has been built. The main static UI of the web app is brought about using HTML and CSS while the streaks of colours and the mouse pointer tracking has been done using Javascript eventlisteners.
 
 # Screenshots
-![Screenshot1]<img width="1008" height="742" alt="image" src="https://github.com/user-attachments/assets/897bee57-fa46-4923-a711-56cd444ef743" />
-
-*Add caption explaining what this shows*
-
-![Screenshot2](Add screenshot 2 here with proper name)
-*Add caption explaining what this shows*
-
-![Screenshot3](Add screenshot 3 here with proper name)
-*Add caption explaining what this shows*
-
-# Diagrams
-![Workflow](Add your workflow/architecture diagram here)
-*Add caption explaining your workflow*
-
+<img width="1008" height="742" alt="image" src="https://github.com/user-attachments/assets/897bee57-fa46-4923-a711-56cd444ef743" />
+*UI of the mouse distance tracker*
 
 # Build Photos
-![Components](Add photo of your components here)
-*List out all components shown*
-
 ![Build](Add photos of build process here)
 *Explain the build steps*
 
