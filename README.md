@@ -38,7 +38,8 @@ It's a web app, not deployed anywhere yet. If you wanna try it out, just clone o
 For Software:
 
 # Screenshots
-![Screenshot1](Add screenshot 1 here with proper name)
+![Screenshot1]<img width="1008" height="742" alt="image" src="https://github.com/user-attachments/assets/897bee57-fa46-4923-a711-56cd444ef743" />
+
 *Add caption explaining what this shows*
 
 ![Screenshot2](Add screenshot 2 here with proper name)
@@ -67,14 +68,9 @@ For Software:
 [Add your demo video link here]
 *Explain what the video demonstrates*
 
-# Additional Demos
-[Add any extra demo materials/links]
-
 ## Team Contributions
-- [Name 1]: [Specific contributions]
-- [Name 2]: [Specific contributions]
-- [Name 3]: [Specific contributions]
-
+- Anna: Research & build
+- Arsha: Research & build
 ---
 Made with ❤️ at TinkerHub Useless Projects 
 
