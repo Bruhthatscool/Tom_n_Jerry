@@ -3,17 +3,83 @@ let totalDistance = 0;
 let lastX, lastY;
 let isFirstMove = true;
 
-// Time-based estimation variables
+// Color palette variables
+let currentPalette = "fire";
+const palettes = {
+  fire: () => `hsl(${Math.random() * 20 + 10}, 100%, 50%)`,
+  ocean: () => `hsl(${Math.random() * 30 + 190}, 80%, 60%)`,
+  forest: () => `hsl(${Math.random() * 60 + 100}, 80%, 40%)`,
+  rainbow: () => `hsl(${Math.random() * 360}, 100%, 50%)`,
+};
+let particles = [];
+
+// Time-based estimation
 let lastActiveTime = Date.now();
 let estimatedDistance = 0;
-const KM_PER_HOUR_ESTIMATE = 3; // Adjust this based on average mouse movement speed
+const KM_PER_HOUR_ESTIMATE = 3;
 
 // DOM elements
 const distanceDisplay = document.getElementById("distance");
 const percentageDisplay = document.getElementById("percentage");
 const comparisonNameDisplay = document.getElementById("comparison-name");
 
-// Distance comparisons (in km)
+// Particle System
+const canvas = document.getElementById("particle-canvas");
+const ctx = canvas.getContext("2d");
+
+function resizeCanvas() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+window.addEventListener("resize", resizeCanvas);
+resizeCanvas();
+
+class Particle {
+  constructor(x, y) {
+    this.x = x;
+    this.y = y;
+    this.size = Math.random() * 3 + 1;
+    this.speedX = Math.random() * 1.5 - 0.75;
+    this.speedY = Math.random() * 1.5 - 0.75;
+    this.color = palettes[currentPalette]();
+    this.life = 100;
+    this.decay = Math.random() * 3 + 2;
+  }
+
+  update() {
+    this.x += this.speedX;
+    this.y += this.speedY;
+    this.life -= this.decay;
+    this.size *= 0.98;
+  }
+
+  draw() {
+    ctx.globalAlpha = this.life / 100;
+    ctx.fillStyle = this.color;
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+    ctx.fill();
+  }
+}
+
+function animateParticles() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  for (let i = 0; i < particles.length; i++) {
+    particles[i].update();
+    particles[i].draw();
+
+    if (particles[i].life <= 0) {
+      particles.splice(i, 1);
+      i--;
+    }
+  }
+
+  requestAnimationFrame(animateParticles);
+}
+animateParticles();
+
+// Comparisons
 const comparisons = [
   { name: "a penguin's migration", distance: 4000 },
   { name: "an arctic tern's yearly migration", distance: 70000 },
@@ -28,49 +94,60 @@ const comparisons = [
 ];
 
 let currentComparison = comparisons[0];
-
-// Conversion factor
 const PIXELS_TO_KM = 0.000025;
 
-// Initialize
 function init() {
-  // Create and add the button
-  const nextBtn = document.createElement("button");
-  nextBtn.id = "next-comparison";
-  nextBtn.textContent = "Next Comparison";
-  document.querySelector(".tracker-container").appendChild(nextBtn);
+  // Get references to existing buttons
+  const nextComparisonBtn = document.getElementById("next-comparison");
+  const colorToggleBtn = document.getElementById("color-toggle");
+  const colorPalette = document.getElementById("color-palette");
 
   // Set up event listeners
-  nextBtn.addEventListener("click", pickRandomComparisonAndUpdate);
+  nextComparisonBtn.addEventListener("click", function () {
+    pickRandomComparison();
+    updateDisplay();
+  });
+
+  colorToggleBtn.addEventListener("click", () => {
+    colorPalette.classList.toggle("hidden");
+  });
+
+  // Color palette options
+  document.querySelectorAll(".color-option").forEach((option) => {
+    option.addEventListener("click", () => {
+      currentPalette = option.dataset.palette;
+      colorPalette.classList.add("hidden");
+      particles = [];
+    });
+  });
+
+  // Other initialization
   document.addEventListener("mousemove", handleMouseMove);
-
-  // Add visibility change listener
   document.addEventListener("visibilitychange", handleVisibilityChange);
-  handleVisibilityChange(); // Initialize
-
-  // Start estimation interval
-  setInterval(updateEstimatedDistance, 1000); // Update every second
-
+  handleVisibilityChange();
+  setInterval(updateEstimatedDistance, 1000);
   updateDisplay();
 }
 
 function pickRandomComparison() {
-  const randomIndex = Math.floor(Math.random() * comparisons.length);
-  currentComparison = comparisons[randomIndex];
+  // Get current index
+  const currentIndex = comparisons.findIndex(
+    (comp) => comp.name === currentComparison.name
+  );
+
+  // Calculate next index (with wrap-around)
+  let nextIndex;
+  do {
+    nextIndex = Math.floor(Math.random() * comparisons.length);
+  } while (nextIndex === currentIndex && comparisons.length > 1);
+
+  currentComparison = comparisons[nextIndex];
 }
 
-function pickRandomComparisonAndUpdate() {
-  pickRandomComparison();
-  updateDisplay();
-}
-
-// New function to handle tab visibility changes
 function handleVisibilityChange() {
   if (document.hidden) {
-    // Tab became inactive - store last active time
     lastActiveTime = Date.now();
   } else {
-    // Tab became active - calculate estimated distance while away
     const timeInactiveMs = Date.now() - lastActiveTime;
     const hoursInactive = timeInactiveMs / (1000 * 60 * 60);
     estimatedDistance += hoursInactive * KM_PER_HOUR_ESTIMATE;
@@ -78,20 +155,11 @@ function handleVisibilityChange() {
   }
 }
 
-// New function to update estimated distance
 function updateEstimatedDistance() {
-  if (!document.hidden) {
-    const timeActiveMs = Date.now() - lastActiveTime;
-    const hoursActive = timeActiveMs / (1000 * 60 * 60);
-    estimatedDistance += hoursActive * KM_PER_HOUR_ESTIMATE;
-    lastActiveTime = Date.now();
-
-    // Add to your total distance
-    if (estimatedDistance > 0) {
-      totalDistance += estimatedDistance;
-      estimatedDistance = 0;
-      updateDisplay();
-    }
+  if (!document.hidden && estimatedDistance > 0) {
+    totalDistance += estimatedDistance;
+    estimatedDistance = 0;
+    updateDisplay();
   }
 }
 
@@ -109,25 +177,24 @@ function handleMouseMove(e) {
     Math.pow(currentX - lastX, 2) + Math.pow(currentY - lastY, 2)
   );
 
-  const distanceKm = distancePixels * PIXELS_TO_KM;
-  totalDistance += distanceKm;
-
+  totalDistance += distancePixels * PIXELS_TO_KM;
   lastX = currentX;
   lastY = currentY;
+
+  // Add just 1 particle per frame
+  if (particles.length < 50) {
+    particles.push(new Particle(currentX, currentY));
+  }
 
   updateDisplay();
 }
 
 function updateDisplay() {
-  const roundedDistance = totalDistance.toFixed(2);
-  distanceDisplay.textContent = `${roundedDistance} km`;
-
-  const percentage = (
+  distanceDisplay.textContent = totalDistance.toFixed(2);
+  percentageDisplay.textContent = (
     (totalDistance / currentComparison.distance) *
     100
-  ).toFixed(4);
-
-  percentageDisplay.textContent = `${percentage}% of`;
+  ).toFixed(3);
   comparisonNameDisplay.textContent = currentComparison.name;
 }
 
