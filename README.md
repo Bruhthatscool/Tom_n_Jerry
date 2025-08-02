@@ -32,7 +32,7 @@ For Software:
 For Software:
 
 # Run
-It's a web app, not deployed anywhere yet. If you wanna try it out, just clone our code and run it!
+[It's a web app, if this deploy link doesnt work and you wanna try it out, just clone our code and run it!](https://tom-n-jerry.onrender.com)
 
 ### Project Documentation
 For Software:
