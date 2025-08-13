@@ -157,6 +157,33 @@ const comparisons = [
 let currentComparison = comparisons[0];
 const PIXELS_TO_KM = 0.000025;
 
+async function getAIComparison(distance) {
+  try {
+    const res = await fetch(
+      "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyDumTs0VFqXgRIDGyU0lNbjFZqElI3Po_o",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          contents: [
+            {
+              parts: [
+                { text: `Make a short, funny one-sentence comparison for traveling ${distance.toFixed(2)} kilometers. Keep it under 15 words.` }
+              ]
+            }
+          ]
+        }
+      }
+    );
+    const data = await res.json();
+    return data.candidates[0].content.parts[0].text;
+  } catch (err) {
+    console.error(err);
+    return null;
+  }
+}
+
+
 function init() {
   // Get references to existing buttons
   const nextComparisonBtn = document.getElementById("next-comparison");
@@ -165,9 +192,14 @@ function init() {
   const shapeToggle = document.getElementById("shape-toggle");
   const shapePalette = document.getElementById("shape-palette");
   // Set up event listeners
-  nextComparisonBtn.addEventListener("click", function () {
-    pickRandomComparison();
-    updateDisplay();
+  nextComparisonBtn.addEventListener("click", async () => {
+    const aiMessage = await getAIComparison(totalDistance);
+    if (aiMessage) {
+      comparisonNameDisplay.textContent = aiMessage;
+    } else {
+      pickRandomComparison();
+      updateDisplay();
+    }
   });
 
   colorToggleBtn.addEventListener("click", () => {
@@ -296,4 +328,5 @@ function updateDisplay() {
 }
 
 init();
+
 
