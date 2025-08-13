@@ -155,6 +155,7 @@ const comparisons = [
 ];
 
 let currentComparison = comparisons[0];
+let aiComparisonActive = false;
 const PIXELS_TO_KM = 0.000025;
 
 async function getAIComparison(distance) {
@@ -168,7 +169,7 @@ async function getAIComparison(distance) {
           contents: [
             {
               parts: [
-                { text: `Make a short, funny one-sentence comparison for traveling ${distance.toFixed(2)} kilometers. Keep it under 15 words.` }
+                { text: `Make a short, funny one-sentence comparison for traveling ${distance.toFixed(2)} kilometers. Keep it under 12 words.` }
               ]
             }
           ]
@@ -195,12 +196,15 @@ function init() {
   nextComparisonBtn.addEventListener("click", async () => {
     const aiMessage = await getAIComparison(totalDistance);
     if (aiMessage) {
+      aiComparisonActive = true;
       comparisonNameDisplay.textContent = aiMessage;
     } else {
+      aiComparisonActive = false;
       pickRandomComparison();
       updateDisplay();
     }
   });
+
 
   colorToggleBtn.addEventListener("click", () => {
     colorPalette.classList.toggle("hidden");
@@ -324,10 +328,16 @@ function updateDisplay() {
     (totalDistance / currentComparison.distance) *
     100
   ).toFixed(3);
-  comparisonNameDisplay.textContent = currentComparison.name;
+
+  // Only change the name if AI comparison is not active
+  if (!aiComparisonActive) {
+    comparisonNameDisplay.textContent = currentComparison.name;
+  }
 }
 
+
 init();
+
 
 
 
