@@ -177,7 +177,21 @@ async function getAIComparison(distance) {
                     3
                   )}%, write only the object of the sentence "That's ${percentage.toFixed(
                     3
-                  )}% of ____". Return just the short, funny comparison for the blank, under 8 words, no punctuation at the start or end. Use random themes like animals, space, food, situations in people's day to day life, it could be anything.Do NOT repeat comparisons from previous requests — treat each request as completely new and unrelated to past ones. Avoid marathons unless the percentage directly relates to them.`,
+                  )}% of ____". Return just the short, funny comparison for the blank, under 8 words, no punctuation at the start or end. 
+                  The comparison must be randomly picked from a very broad range of categories such as: 
+- animals (rare or unusual, avoid cat, snail, sloth, turtle)
+- outer space objects and events
+- foods and drinks
+- famous landmarks
+- fictional characters or pop culture items
+- historical events
+- unusual natural phenomena
+- sports (avoid marathons unless relevant)
+- gadgets or technology
+
+Do NOT reuse the same category in consecutive calls.
+Do NOT repeat comparisons from earlier requests.
+Treat each request as totally new and unrelated to past ones.`,
                 },
               ],
             },
@@ -350,3 +364,4 @@ function updateDisplay() {
 }
 
 init();
+
