@@ -199,6 +199,27 @@ function init() {
 
   // Other initialization
   document.addEventListener("mousemove", handleMouseMove);
+
+  document.addEventListener("touchmove", function (e) {
+    if (e.touches && e.touches.length > 0) {
+      const touch = e.touches[0];
+      handleMouseMove({
+        clientX: touch.clientX,
+        clientY: touch.clientY
+      });
+    }
+  }, { passive: false });
+
+  document.addEventListener("touchstart", function (e) {
+    if (e.touches && e.touches.length > 0) {
+      const touch = e.touches[0];
+      lastX = touch.clientX;
+      lastY = touch.clientY;
+      isFirstMove = false;
+    }
+  }, { passive: false });
+
+  
   document.addEventListener("visibilitychange", handleVisibilityChange);
   handleVisibilityChange();
   setInterval(updateEstimatedDistance, 1000);
@@ -275,3 +296,4 @@ function updateDisplay() {
 }
 
 init();
+
