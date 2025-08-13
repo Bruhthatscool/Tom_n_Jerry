@@ -170,7 +170,7 @@ async function getAIComparison(distance) {
           contents: [
             {
               parts: [
-                { text: `Given a distance of ${distance.toFixed(2)} km and a percentage of ${percentage.toFixed(3)}%, write only the object of the sentence "That's ${percentage.toFixed(3)}% of ____". Return just the short, funny comparison for the blank, under 8 words, no punctuation at the start.` }
+                { text: `Given a distance of ${distance.toFixed(2)} km and a percentage of ${percentage.toFixed(3)}%, write only the object of the sentence "That's ${percentage.toFixed(3)}% of ____". Return just the short, funny comparison for the blank, under 8 words, no punctuation at the start. Do NOT mention marathons unless explicitly told. Use random themes like animals, space, food or situations in real life, it could be anything.` }
               ]
             }
           ]
@@ -338,6 +338,7 @@ function updateDisplay() {
 
 
 init();
+
 
 
 
