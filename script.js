@@ -169,7 +169,7 @@ async function getAIComparison(distance) {
           contents: [
             {
               parts: [
-                { text: `Make a short, funny one-sentence comparison for traveling ${distance.toFixed(2)} kilometers. Keep it under 12 words.` }
+                { text: `Given a distance of ${distance.toFixed(2)} km and a percentage of ${percentage.toFixed(3)}%, write only the object of the sentence "That's ${percentage.toFixed(3)}% of ____". Return just the short, funny comparison for the blank, under 8 words, no punctuation at the start.` }
               ]
             }
           ]
@@ -337,6 +337,7 @@ function updateDisplay() {
 
 
 init();
+
 
 
 
