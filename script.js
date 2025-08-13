@@ -170,11 +170,19 @@ async function getAIComparison(distance) {
           contents: [
             {
               parts: [
-                { text: `Given a distance of ${distance.toFixed(2)} km and a percentage of ${percentage.toFixed(3)}%, write only the object of the sentence "That's ${percentage.toFixed(3)}% of ____". Return just the short, funny comparison for the blank, under 8 words, no punctuation at the start. Do NOT mention marathons unless explicitly told. Use random themes like animals, space, food or situations in real life, it could be anything.` }
-              ]
-            }
-          ]
-        })
+                {
+                  text: `Given a distance of ${distance.toFixed(
+                    2
+                  )} km and a percentage of ${percentage.toFixed(
+                    3
+                  )}%, write only the object of the sentence "That's ${percentage.toFixed(
+                    3
+                  )}% of ____". Return just the short, funny comparison for the blank, under 8 words, no punctuation at the start or end. Use random themes like animals, space, food, situations in people's day to day life, it could be anything.Do NOT repeat comparisons from previous requests — treat each request as completely new and unrelated to past ones. Avoid marathons unless the percentage directly relates to them.`,
+                },
+              ],
+            },
+          ],
+        }),
       }
     );
     const data = await res.json();
@@ -184,7 +192,6 @@ async function getAIComparison(distance) {
     return null;
   }
 }
-
 
 function init() {
   // Get references to existing buttons
@@ -205,7 +212,6 @@ function init() {
       updateDisplay();
     }
   });
-
 
   colorToggleBtn.addEventListener("click", () => {
     colorPalette.classList.toggle("hidden");
@@ -237,26 +243,33 @@ function init() {
   // Other initialization
   document.addEventListener("mousemove", handleMouseMove);
 
-  document.addEventListener("touchmove", function (e) {
-    if (e.touches && e.touches.length > 0) {
-      const touch = e.touches[0];
-      handleMouseMove({
-        clientX: touch.clientX,
-        clientY: touch.clientY
-      });
-    }
-  }, { passive: false });
+  document.addEventListener(
+    "touchmove",
+    function (e) {
+      if (e.touches && e.touches.length > 0) {
+        const touch = e.touches[0];
+        handleMouseMove({
+          clientX: touch.clientX,
+          clientY: touch.clientY,
+        });
+      }
+    },
+    { passive: false }
+  );
 
-  document.addEventListener("touchstart", function (e) {
-    if (e.touches && e.touches.length > 0) {
-      const touch = e.touches[0];
-      lastX = touch.clientX;
-      lastY = touch.clientY;
-      isFirstMove = false;
-    }
-  }, { passive: false });
+  document.addEventListener(
+    "touchstart",
+    function (e) {
+      if (e.touches && e.touches.length > 0) {
+        const touch = e.touches[0];
+        lastX = touch.clientX;
+        lastY = touch.clientY;
+        isFirstMove = false;
+      }
+    },
+    { passive: false }
+  );
 
-  
   document.addEventListener("visibilitychange", handleVisibilityChange);
   handleVisibilityChange();
   setInterval(updateEstimatedDistance, 1000);
@@ -336,12 +349,4 @@ function updateDisplay() {
   }
 }
 
-
 init();
-
-
-
-
-
-
-
