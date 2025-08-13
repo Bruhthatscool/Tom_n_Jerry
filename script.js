@@ -159,6 +159,7 @@ let aiComparisonActive = false;
 const PIXELS_TO_KM = 0.000025;
 
 async function getAIComparison(distance) {
+  percentage = Number(percentage);
   try {
     const res = await fetch(
       "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyDumTs0VFqXgRIDGyU0lNbjFZqElI3Po_o",
@@ -337,6 +338,7 @@ function updateDisplay() {
 
 
 init();
+
 
 
 
