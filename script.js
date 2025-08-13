@@ -172,7 +172,7 @@ async function getAIComparison(distance) {
               ]
             }
           ]
-        }
+        })
       }
     );
     const data = await res.json();
@@ -328,5 +328,6 @@ function updateDisplay() {
 }
 
 init();
+
 
 
